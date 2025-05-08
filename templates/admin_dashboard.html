@@ -1,0 +1,496 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock title %}
+
+{% block head %}
+<style>
+    :root {
+        --primary-color: #1a237e;
+        --secondary-color: #0d47a1;
+        --accent-color: #2962ff;
+        --success-color: #00c853;
+        --warning-color: #ffd600;
+        --danger-color: #ff1744;
+        --text-color: #1a237e;
+        --light-bg: #f5f7fa;
+        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        --gradient-primary: linear-gradient(135deg, #1a237e, #0d47a1);
+        --gradient-success: linear-gradient(135deg, #00c853, #009624);
+        --gradient-warning: linear-gradient(135deg, #ffd600, #ffab00);
+    }
+
+    body {
+        background: var(--light-bg);
+    }
+
+    .dashboard-container {
+        padding: 30px;
+        min-height: 100vh;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .stat-card i {
+        font-size: 2.8rem;
+        margin-bottom: 20px;
+        color: var(--accent-color);
+        background: rgba(41, 98, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover i {
+        transform: scale(1.1);
+    }
+
+    .stat-card h3 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+
+    .stat-card p {
+        color: #546e7a;
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    .welcome-banner {
+        background: var(--gradient-primary);
+        color: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: var(--card-shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(45deg);
+    }
+
+    .welcome-banner h4 {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .welcome-banner p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+
+    .sidebar {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--card-shadow);
+        position: sticky;
+        top: 20px;
+        height: calc(100vh - 40px);
+    }
+
+    .nav-link {
+        color: var(--text-color);
+        padding: 15px 20px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        background: var(--gradient-primary);
+        color: white;
+        transform: translateX(5px);
+    }
+
+    .nav-link i {
+        font-size: 1.3rem;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        color: var(--primary-color);
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-title i {
+        color: var(--accent-color);
+        background: rgba(41, 98, 255, 0.1);
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .action-btn {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 18px;
+        border-radius: 15px;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.1rem;
+    }
+
+    .action-btn i {
+        font-size: 1.3rem;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .recent-activity {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .activity-item {
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        margin-bottom: 10px;
+    }
+
+    .activity-item:hover {
+        background: rgba(41, 98, 255, 0.05);
+        transform: translateX(5px);
+    }
+
+    .activity-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        background: rgba(41, 98, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        color: var(--accent-color);
+        font-size: 1.4rem;
+    }
+
+    .badge-custom {
+        background: rgba(41, 98, 255, 0.1);
+        color: var(--accent-color);
+        padding: 8px 15px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .quick-actions {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--card-shadow);
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 15px;
+        }
+        
+        .stat-card {
+            padding: 20px;
+        }
+        
+        .welcome-banner {
+            padding: 20px;
+        }
+        
+        .sidebar {
+            position: static;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="dashboard-container">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="sidebar">
+                <h4 class="mb-4">Admin Panel</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a href="{% url 'admin_dashboard' %}" class="nav-link active">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'admin_members' %}" class="nav-link">
+                            <i class="bi bi-people"></i> Members
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'admin_attendance' %}" class="nav-link">
+                            <i class="bi bi-calendar-check"></i> Attendance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'admin_payments' %}" class="nav-link">
+                            <i class="bi bi-cash-stack"></i> Payments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'admin_trainers' %}" class="nav-link">
+                            <i class="bi bi-person-badge"></i> Trainers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h4>Welcome back, {{ request.user.username }}! 👋</h4>
+                <p>Here's what's happening at Temple Fitness today.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <i class="bi bi-people"></i>
+                        <h3>{{ total_members }}</h3>
+                        <p>Total Members</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <i class="bi bi-calendar-check"></i>
+                        <h3>{{ today_attendance }}</h3>
+                        <p>Today's Attendance</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <i class="bi bi-cash-stack"></i>
+                        <h3>₹{{ monthly_revenue }}</h3>
+                        <p>Monthly Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Quick Actions -->
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <div class="chart-container">
+                        <h5 class="section-title">
+                            <i class="bi bi-graph-up"></i>
+                            Monthly Attendance Overview
+                        </h5>
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="quick-actions">
+                        <h5 class="section-title">
+                            <i class="bi bi-lightning"></i>
+                            Quick Actions
+                        </h5>
+                        <button class="action-btn btn btn-primary">
+                            <i class="bi bi-person-plus"></i>
+                            Add New Member
+                        </button>
+                        <button class="action-btn btn btn-success">
+                            <i class="bi bi-cash"></i>
+                            Record Payment
+                        </button>
+                        <button class="action-btn btn btn-info">
+                            <i class="bi bi-file-earmark-text"></i>
+                            Generate Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity and Upcoming Renewals -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="recent-activity">
+                        <h5 class="section-title">
+                            <i class="bi bi-activity"></i>
+                            Recent Activity
+                        </h5>
+                        {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0"><strong>{{ activity.title }}</strong></p>
+                                <small class="text-muted">{{ activity.description }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="recent-activity">
+                        <h5 class="section-title">
+                            <i class="bi bi-calendar-event"></i>
+                            Upcoming Renewals
+                        </h5>
+                        {% for renewal in upcoming_renewals %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0"><strong>{{ renewal.member.name }}</strong></p>
+                                <small class="text-muted">
+                                    <span class="badge-custom">Expires in {{ renewal.days_left }} days</span>
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js for graphs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Attendance Chart
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Monthly Attendance',
+                data: [65, 59, 80, 81, 56, 55],
+                fill: true,
+                backgroundColor: 'rgba(41, 98, 255, 0.1)',
+                borderColor: '#2962ff',
+                tension: 0.4,
+                pointBackgroundColor: '#2962ff',
+                pointBorderColor: '#fff',
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock body %} 
