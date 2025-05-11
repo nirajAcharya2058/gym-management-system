@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">Welcome to the Admin Dashboard</h1>
+    <div class="row">
+        <!-- Total Members -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-users me-2"></i>Total Members
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_members }}</h3>
+                    <p class="card-text">Registered members in the system.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Attendances -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calendar-check me-2"></i>Total Attendances
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_attendances }}</h3>
+                    <p class="card-text">Attendance records logged.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Services -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-concierge-bell me-2"></i>Total Services
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_services }}</h3>
+                    <p class="card-text">Available services offered.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Gallery Items -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-images me-2"></i>Total Gallery Items
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_gallery }}</h3>
+                    <p class="card-text">Images in the gallery.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
